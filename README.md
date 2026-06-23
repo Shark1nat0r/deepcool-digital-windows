@@ -53,7 +53,8 @@ This project was heavily inspired by Nortank12's work (https://github.com/Nortan
     - The **self-contained version**, which includes all necessary runtime files.
     - The **framework-dependent version**, which requires .NET 9 Runtime to be installed separately.
 3. Extract the downloaded files to a folder of your choice.
-4. Run `Deepcool-Digital-Windows.exe` with administrator privileges.
+4. Install the [PawnIO Driver](https://pawnio.eu/) for hardware access to display the current CPU Temperature.
+5. Run `Deepcool-Digital-Windows.exe` with administrator privileges.
 
 ---
 
