@@ -8,7 +8,7 @@ public class TrayApplicationContext : ApplicationContext
 {
     private readonly TrayIconManager _trayIconManager;
     private readonly CpuMonitor _cpuMonitor;
-    private readonly AkSeriesDevice _akDevice;
+    private readonly IDisplayDevice _device;
     private readonly System.Windows.Forms.Timer _updateTimer;
 
     private const string CpuTemperatureOptionText = "Show CPU Temperature";
@@ -23,9 +23,10 @@ public class TrayApplicationContext : ApplicationContext
         _isFahrenheit = Properties.Settings.Default.UseFahrenheit;
         _showCpuUsage = Properties.Settings.Default.ShowCpuUsage;
 
+        // Detect the device first so a failure doesn't leave a stale tray icon behind
+        _device = DeviceFactory.Create();
         _trayIconManager = new TrayIconManager();
         _cpuMonitor = new CpuMonitor();
-        _akDevice = new AkSeriesDevice();
 
         _updateTimer = new System.Windows.Forms.Timer { Interval = 1000 };
         _updateTimer.Tick += UpdateTimer_Tick;
@@ -41,18 +42,9 @@ public class TrayApplicationContext : ApplicationContext
 
     private void UpdateTimer_Tick(object? sender, EventArgs e)
     {
-        if (_showCpuUsage)
-        {
-            var usage = _cpuMonitor.GetUsage();
-            _akDevice.SetDisplayMode(DisplayMode.CpuUsage);
-            _akDevice.UpdateDisplay(cpuTemperature: 0, cpuUsage: usage);
-        }
-        else
-        {
-            var temperature = _cpuMonitor.GetTemperature(_isFahrenheit);
-            _akDevice.SetDisplayMode(DisplayMode.CpuTemperature);
-            _akDevice.UpdateDisplay(cpuTemperature: temperature, cpuUsage: 0, isFahrenheit: _isFahrenheit);
-        }
+        var status = _cpuMonitor.Read(_isFahrenheit);
+        _device.SetDisplayMode(_showCpuUsage ? DisplayMode.CpuUsage : DisplayMode.CpuTemperature);
+        _device.UpdateDisplay(status, _isFahrenheit);
     }
 
     private void TrayIconManager_TemperatureUnitToggled(object? sender, bool isFahrenheit)
@@ -92,6 +84,8 @@ public class TrayApplicationContext : ApplicationContext
         _trayIconManager.SetTemperatureUnitState(_isFahrenheit);
 
         _trayIconManager.SetDisplayModeText(_showCpuUsage ? CpuTemperatureOptionText : CpuUsageOptionText);
+        _trayIconManager.SetDisplayModeVisible(_device.SupportsDisplayModes);
+        _trayIconManager.SetTooltipText($"DeepCool Display ({_device.Name})");
     }
 
     private void SaveSettings()
@@ -111,7 +105,7 @@ public class TrayApplicationContext : ApplicationContext
             _updateTimer.Stop();
             _trayIconManager.Dispose();
             _cpuMonitor.Dispose();
-            _akDevice.Dispose();
+            _device.Dispose();
         }
 
 		base.Dispose(disposing);

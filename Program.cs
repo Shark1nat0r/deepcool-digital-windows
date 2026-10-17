@@ -22,7 +22,18 @@ internal static class Program
             }
         }
 
-        Application.Run(new TrayApplicationContext());
+        TrayApplicationContext context;
+        try
+        {
+            context = new TrayApplicationContext();
+        }
+        catch (Exception ex)
+        {
+            MessageBox.Show(ex.Message, "DeepCool Display", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            return;
+        }
+
+        Application.Run(context);
     }
 
     private static bool IsAdministrator()

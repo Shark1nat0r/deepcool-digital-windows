@@ -1,16 +1,10 @@
-﻿using HidSharp;
+﻿using DeepCool_Display.Monitor;
+using HidSharp;
 
 namespace DeepCool_Display.Devices;
 
-public enum DisplayMode
+public class AkSeriesDevice : IDisplayDevice
 {
-    CpuTemperature,
-    CpuUsage
-}
-
-public class AkSeriesDevice : IDisposable
-{
-    private const int VendorId = 13875;
     private const byte ReportId = 16;
     private const byte InitCommand = 170;
     private const byte TemperatureModeCelsius = 19;
@@ -24,8 +18,12 @@ public class AkSeriesDevice : IDisposable
     private readonly byte[] _displayData = new byte[64];
     private DisplayMode _currentMode;
 
-    public AkSeriesDevice()
+    public string Name => "AK Series";
+    public bool SupportsDisplayModes => true;
+
+    public AkSeriesDevice(HidDevice device)
     {
+        _device = device;
         InitializeDevice();
         _displayData[0] = ReportId;
         _currentMode = DisplayMode.CpuTemperature;
@@ -33,15 +31,7 @@ public class AkSeriesDevice : IDisposable
 
     private void InitializeDevice()
     {
-        var deviceList = DeviceList.Local;
-        _device = deviceList.GetHidDevices(VendorId).FirstOrDefault(d => d.ProductID is >= 1 and <= 4);
-
-        if (_device == null)
-        {
-            throw new Exception("No AK Series device found");
-        }
-
-        if (!_device.TryOpen(out _stream))
+        if (!_device!.TryOpen(out _stream))
         {
             throw new Exception("Failed to open AK Series device");
         }
@@ -55,6 +45,11 @@ public class AkSeriesDevice : IDisposable
     public void SetDisplayMode(DisplayMode mode)
     {
         _currentMode = mode;
+    }
+
+    public void UpdateDisplay(CpuStatus status, bool isFahrenheit)
+    {
+        UpdateDisplay(cpuTemperature: status.Temperature, cpuUsage: status.Usage, isFahrenheit: isFahrenheit);
     }
 
     public void UpdateDisplay(float cpuTemperature = 0, float cpuUsage = 0, bool isFahrenheit = false, bool alarmEnabled = true)
