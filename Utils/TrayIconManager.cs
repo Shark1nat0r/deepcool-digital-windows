@@ -79,6 +79,16 @@ public class TrayIconManager : IDisposable
         _toggleDisplayModeMenuItem.Text = text;
     }
 
+    public void SetDisplayModeVisible(bool visible)
+    {
+        _toggleDisplayModeMenuItem.Visible = visible;
+    }
+
+    public void SetTooltipText(string text)
+    {
+        _trayIcon.Text = text;
+    }
+
     public void Dispose()
     {
         _trayIcon.Dispose();

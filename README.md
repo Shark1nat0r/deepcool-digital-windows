@@ -1,12 +1,13 @@
 ﻿# Deepcool-Digital-Windows
 
-**Deepcool-Digital-Windows** is a lightweight alternative to the official software from Deepcool, designed to display CPU usage and temperature on Deepcool coolers. It currently supports **non-pro AK series devices only**. This project is intended for users who prefer a streamlined solution for monitoring their CPU metrics without the overhead of the official software.
+**Deepcool-Digital-Windows** is a lightweight alternative to the official software from Deepcool, designed to display CPU usage and temperature on Deepcool coolers. It currently supports **non-pro AK series** and **AK G2 series (DIGITAL NYX)** devices. This project is intended for users who prefer a streamlined solution for monitoring their CPU metrics without the overhead of the official software.
 
 ---
 
 ## Features
 
 - Displays **CPU usage** and **CPU temperature** directly on supported Deepcool AK series coolers.
+- On AK G2 series coolers, sends **CPU power**, **temperature**, **usage** and **frequency**; the cooler cycles through them on its own.
 - Toggle between **Celsius** and **Fahrenheit** temperature units.
 - Switch between displaying **CPU usage** or **CPU temperature**.
 - Lightweight and efficient implementation using the **.NET 9 Runtime**.
@@ -15,8 +16,11 @@
 
 ## Supported Devices
 
-- **Non-Pro AK Series Coolers**
-    - This app does not currently support Pro models or other Deepcool devices.
+- **Non-Pro AK Series Coolers** (AK400 DIGITAL, AK500 DIGITAL, AK500S DIGITAL, AK620 DIGITAL)
+- **AK G2 Series Coolers** (AK400 G2 DIGITAL NYX, AK500 G2 DIGITAL NYX, AK620 G2 DIGITAL NYX, AK700 DIGITAL NYX)
+    - The display mode toggle is hidden for these devices, since the cooler shows all metrics itself.
+- This app does not currently support Pro models or other Deepcool devices.
+- The device is detected automatically by its USB product ID.
 
 ---
 
