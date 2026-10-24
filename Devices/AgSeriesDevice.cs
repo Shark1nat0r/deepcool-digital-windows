@@ -35,7 +35,7 @@ public class AgSeriesDevice : IDisplayDevice
         _currentMode = mode;
     }
 
-    // The AG display has two digits and only supports Celsius, so isFahrenheit is ignored
+    // The AG display has two digits and only supports Celsius, so Fahrenheit readings are converted back
     public void UpdateDisplay(CpuStatus status, bool isFahrenheit)
     {
         if (_stream == null)
@@ -43,7 +43,8 @@ public class AgSeriesDevice : IDisplayDevice
             throw new InvalidOperationException("Device stream is not initialized");
         }
 
-        var tempValue = (int)Math.Round(status.Temperature);
+        var temperature = isFahrenheit ? (status.Temperature - 32) * 5 / 9 : status.Temperature;
+        var tempValue = (int)Math.Round(temperature);
         var value = _currentMode switch
         {
             DisplayMode.CpuTemperature => tempValue,
