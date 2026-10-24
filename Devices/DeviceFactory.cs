@@ -12,6 +12,9 @@ public static class DeviceFactory
     // AK620 G2 DIGITAL NYX, AK700 DIGITAL NYX, AK400 G2 DIGITAL NYX, AK500 G2 DIGITAL NYX
     private static readonly int[] AkG2SeriesProductIds = [41, 42, 43, 44];
 
+    // AG300 DIGITAL, AG400 DIGITAL, AG500 DIGITAL, AG620 DIGITAL
+    private const int AgSeriesProductId = 8;
+
     public static IDisplayDevice Create()
     {
         var devices = DeviceList.Local.GetHidDevices(VendorId).ToList();
@@ -26,6 +29,12 @@ public static class DeviceFactory
         if (akDevice != null)
         {
             return new AkSeriesDevice(akDevice);
+        }
+
+        var agDevice = devices.FirstOrDefault(d => d.ProductID == AgSeriesProductId);
+        if (agDevice != null)
+        {
+            return new AgSeriesDevice(agDevice);
         }
 
         var found = devices.Count == 0

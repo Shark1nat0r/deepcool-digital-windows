@@ -19,6 +19,8 @@
 - **Non-Pro AK Series Coolers** (AK400 DIGITAL, AK500 DIGITAL, AK500S DIGITAL, AK620 DIGITAL)
 - **AK G2 Series Coolers** (AK400 G2 DIGITAL NYX, AK500 G2 DIGITAL NYX, AK620 G2 DIGITAL NYX, AK700 DIGITAL NYX)
     - The display mode toggle is hidden for these devices, since the cooler shows all metrics itself.
+- **AG Series Coolers** (AG300 DIGITAL, AG400 DIGITAL, AG500 DIGITAL, AG620 DIGITAL)
+    - Only Celsius is supported; values are limited to two digits (max. 99).
 - This app does not currently support Pro models or other Deepcool devices.
 - The device is detected automatically by its USB product ID.
 
