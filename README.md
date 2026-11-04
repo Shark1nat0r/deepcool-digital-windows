@@ -1,6 +1,9 @@
 ﻿# Deepcool-Digital-Windows
 
-**Deepcool-Digital-Windows** is a lightweight alternative to the official software from Deepcool, designed to display CPU usage and temperature on Deepcool coolers. It currently supports **non-pro AK series** and **AK G2 series (DIGITAL NYX)** devices. This project is intended for users who prefer a streamlined solution for monitoring their CPU metrics without the overhead of the official software.
+**Deepcool-Digital-Windows** is a lightweight alternative to the official software from Deepcool, designed to display CPU usage and temperature on Deepcool coolers. It currently supports **non-pro AK series**, **AK G2 series (DIGITAL NYX)**, **AK DIGITAL PRO (AK500/AK620)** and **AG series** devices. This project is intended for users who prefer a streamlined solution for monitoring their CPU metrics without the overhead of the official software.
+
+> [!IMPORTANT]
+> **CPU temperature, power consumption and frequency require the [PawnIO driver](https://pawnio.eu/).** Without it, the app still works and shows CPU usage, but the other values are shown as 0.
 
 ---
 
@@ -45,24 +48,26 @@ This project was heavily inspired by Nortank12's work (https://github.com/Nortan
 ## Requirements
 
 1. **.NET 9 Runtime**
-    - You can find two versions of the app on the [Releases page](https://github.com/your-repository/releases):
+    - You can find two versions of the app on the [Releases page](https://github.com/Shark1nat0r/deepcool-digital-windows/releases):
         - A version that includes the runtime (self-contained).
         - A version that does not include the runtime (framework-dependent).
     - If using the framework-dependent version, ensure the .NET 9 Runtime is installed on your system. Download it from [Microsoft's official site](https://dotnet.microsoft.com/).
 2. **Administrator Rights**
     - The app requires elevated privileges to access CPU temperature data.
+3. **[PawnIO Driver](https://pawnio.eu/)** (optional, for temperature, power and frequency)
+    - Required to read CPU temperature, power consumption and frequency. Without it, CPU usage still works, but the other values are shown as 0.
 
 ---
 
 ## Installation
 
-1. Download the latest release from the [Releases page](https://github.com/your-repository/releases).
+1. Download the latest release from the [Releases page](https://github.com/Shark1nat0r/deepcool-digital-windows/releases).
 2. Choose either:
     - The **self-contained version**, which includes all necessary runtime files.
     - The **framework-dependent version**, which requires .NET 9 Runtime to be installed separately.
-3. Extract the downloaded files to a folder of your choice.
-4. Install the [PawnIO Driver](https://pawnio.eu/) for hardware access to display the current CPU Temperature.
-5. Run `Deepcool-Digital-Windows.exe` with administrator privileges.
+3. Save the downloaded `.exe` to a folder of your choice.
+4. **Install the [PawnIO Driver](https://pawnio.eu/)** if you want CPU temperature, power and frequency readings. CPU usage works without it.
+5. Run `deepcool-display-self-contained.exe` (or `deepcool-display-framework-dependent.exe`) with administrator privileges.
 
 ### Verifying a Release
 
@@ -78,7 +83,7 @@ The `SHA256SUMS.txt` file attached to each release lists the checksums of the bi
 
 ## Usage
 
-1. Launch the application by double-clicking `Deepcool-Digital-Windows.exe`.
+1. Launch the application by double-clicking the downloaded `.exe`.
 2. Use the tray icon to toggle between Celsius/Fahrenheit or CPU usage/temperature display modes, and to set the update interval (1–10 seconds).
 3. Monitor your CPU metrics directly on your supported Deepcool AK series cooler.
 
