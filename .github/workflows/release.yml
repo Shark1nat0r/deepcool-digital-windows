@@ -1,0 +1,51 @@
+name: Release
+
+on:
+  push:
+    tags: ['v*']
+  workflow_dispatch:
+
+permissions:
+  contents: write      # create the GitHub release
+  id-token: write      # sign the build provenance attestation
+  attestations: write  # store the attestation
+
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 9.0.x
+
+      - name: Publish
+        shell: pwsh
+        run: |
+          $common = @('DeepCool-Display.csproj', '-c', 'Release', '-r', 'win-x64',
+                      '-p:PublishSingleFile=true', '-p:ContinuousIntegrationBuild=true')
+          dotnet publish @common --self-contained true -p:IncludeNativeLibrariesForSelfExtract=true -o out/sc
+          dotnet publish @common --self-contained false -o out/fd
+          New-Item -ItemType Directory dist | Out-Null
+          Copy-Item out/sc/DeepCool-Display.exe dist/deepcool-display-self-contained.exe
+          Copy-Item out/fd/DeepCool-Display.exe dist/deepcool-display-framework-dependent.exe
+          Get-FileHash dist/*.exe -Algorithm SHA256 |
+            ForEach-Object { "$($_.Hash.ToLower())  $(Split-Path $_.Path -Leaf)" } |
+            Set-Content dist/SHA256SUMS.txt
+
+      - uses: actions/attest-build-provenance@v2
+        with:
+          subject-path: dist/*.exe
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: deepcool-display
+          path: dist/
+
+      - name: Create release
+        if: startsWith(github.ref, 'refs/tags/')
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh release create "${{ github.ref_name }}" dist/* --title "${{ github.ref_name }}" --generate-notes

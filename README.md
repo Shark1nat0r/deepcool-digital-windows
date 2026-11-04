@@ -64,6 +64,16 @@ This project was heavily inspired by Nortank12's work (https://github.com/Nortan
 4. Install the [PawnIO Driver](https://pawnio.eu/) for hardware access to display the current CPU Temperature.
 5. Run `Deepcool-Digital-Windows.exe` with administrator privileges.
 
+### Verifying a Release
+
+Releases are built by GitHub Actions from the tagged commit and signed with a build provenance attestation. To check that a downloaded file was built by this repository's workflow, run:
+
+```
+gh attestation verify deepcool-display-self-contained.exe --repo Shark1nat0r/deepcool-digital-windows
+```
+
+The `SHA256SUMS.txt` file attached to each release lists the checksums of the binaries.
+
 ---
 
 ## Usage
