@@ -16,19 +16,22 @@ public class TrayApplicationContext : ApplicationContext
 
     private bool _isFahrenheit;
     private bool _showCpuUsage;
+    private int _updateIntervalSeconds;
     private readonly Random _random = new Random();
 
     public TrayApplicationContext()
     {
         _isFahrenheit = Properties.Settings.Default.UseFahrenheit;
         _showCpuUsage = Properties.Settings.Default.ShowCpuUsage;
+        _updateIntervalSeconds = Math.Clamp(Properties.Settings.Default.UpdateIntervalSeconds,
+            TrayIconManager.MinUpdateIntervalSeconds, TrayIconManager.MaxUpdateIntervalSeconds);
 
         // Detect the device first so a failure doesn't leave a stale tray icon behind
         _device = DeviceFactory.Create();
         _trayIconManager = new TrayIconManager();
         _cpuMonitor = new CpuMonitor();
 
-        _updateTimer = new System.Windows.Forms.Timer { Interval = 1000 };
+        _updateTimer = new System.Windows.Forms.Timer { Interval = _updateIntervalSeconds * 1000 };
         _updateTimer.Tick += UpdateTimer_Tick;
         _updateTimer.Start();
 
@@ -36,6 +39,7 @@ public class TrayApplicationContext : ApplicationContext
         _trayIconManager.DisplayModeToggled += TrayIconManager_DisplayModeToggled;
         _trayIconManager.ExitClicked += TrayIconManager_ExitClicked;
         _trayIconManager.AutoStartToggled += TrayIconManager_AutoStartToggled;
+        _trayIconManager.UpdateIntervalChanged += TrayIconManager_UpdateIntervalChanged;
 
         InitializeAutoStartState();
     }
@@ -56,6 +60,13 @@ public class TrayApplicationContext : ApplicationContext
     {
         _showCpuUsage = !_showCpuUsage;
         _trayIconManager.SetDisplayModeText(_showCpuUsage ? CpuTemperatureOptionText : CpuUsageOptionText);
+    }
+
+    private void TrayIconManager_UpdateIntervalChanged(object? sender, int seconds)
+    {
+        _updateIntervalSeconds = seconds;
+        _updateTimer.Interval = seconds * 1000;
+        _trayIconManager.SetUpdateInterval(seconds);
     }
 
     private static void TrayIconManager_ExitClicked(object? sender, EventArgs e)
@@ -82,6 +93,7 @@ public class TrayApplicationContext : ApplicationContext
         _trayIconManager.SetAutoStartMenuItemState(isAutoStartEnabled);
 
         _trayIconManager.SetTemperatureUnitState(_isFahrenheit);
+        _trayIconManager.SetUpdateInterval(_updateIntervalSeconds);
 
         _trayIconManager.SetDisplayModeText(_showCpuUsage ? CpuTemperatureOptionText : CpuUsageOptionText);
         _trayIconManager.SetDisplayModeVisible(_device.SupportsDisplayModes);
@@ -92,6 +104,7 @@ public class TrayApplicationContext : ApplicationContext
     {
         Properties.Settings.Default.ShowCpuUsage = _showCpuUsage;
         Properties.Settings.Default.UseFahrenheit = _isFahrenheit;
+        Properties.Settings.Default.UpdateIntervalSeconds = _updateIntervalSeconds;
 
         Properties.Settings.Default.Save();
     }

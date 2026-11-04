@@ -23,5 +23,13 @@ namespace DeepCool_Display.Properties
             get => (bool)this["UseFahrenheit"];
             set => this["UseFahrenheit"] = value;
         }
+
+        [UserScopedSetting]
+        [DefaultSettingValue("1")]
+        public int UpdateIntervalSeconds
+        {
+            get => (int)this["UpdateIntervalSeconds"];
+            set => this["UpdateIntervalSeconds"] = value;
+        }
     }
 }

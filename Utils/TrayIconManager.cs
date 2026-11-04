@@ -8,11 +8,16 @@ public class TrayIconManager : IDisposable
     private readonly ToolStripMenuItem _autoStartMenuItem;
     private readonly ToolStripMenuItem _temperatureUnitMenuItem;
     private readonly ToolStripMenuItem _toggleDisplayModeMenuItem;
+    private readonly ToolStripMenuItem _updateIntervalMenuItem;
 
     public event EventHandler? ExitClicked;
     public event EventHandler<bool>? AutoStartToggled;
     public event EventHandler<bool>? TemperatureUnitToggled;
     public event EventHandler? DisplayModeToggled; // New event for toggling display mode
+    public event EventHandler<int>? UpdateIntervalChanged;
+
+    public const int MinUpdateIntervalSeconds = 1;
+    public const int MaxUpdateIntervalSeconds = 10;
 
     public TrayIconManager()
     {
@@ -35,6 +40,16 @@ public class TrayIconManager : IDisposable
         };
         _temperatureUnitMenuItem.CheckedChanged += TemperatureUnitMenuItem_CheckedChanged;
         contextMenu.Items.Add(_temperatureUnitMenuItem);
+
+        _updateIntervalMenuItem = new ToolStripMenuItem("Update Interval");
+        for (var seconds = MinUpdateIntervalSeconds; seconds <= MaxUpdateIntervalSeconds; seconds++)
+        {
+            var interval = seconds;
+            var item = _updateIntervalMenuItem.DropDownItems.Add($"{interval} s", null,
+                (_, _) => UpdateIntervalChanged?.Invoke(this, interval));
+            item.Tag = interval;
+        }
+        contextMenu.Items.Add(_updateIntervalMenuItem);
 
         _autoStartMenuItem = new ToolStripMenuItem("Start with Windows")
         {
@@ -72,6 +87,14 @@ public class TrayIconManager : IDisposable
     public void SetTemperatureUnitState(bool isFahrenheit)
     {
         _temperatureUnitMenuItem.Checked = isFahrenheit;
+    }
+
+    public void SetUpdateInterval(int seconds)
+    {
+        foreach (ToolStripMenuItem item in _updateIntervalMenuItem.DropDownItems)
+        {
+            item.Checked = item.Tag is int interval && interval == seconds;
+        }
     }
 
     public void SetDisplayModeText(string text)

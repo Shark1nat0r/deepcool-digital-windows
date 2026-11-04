@@ -67,7 +67,7 @@ This project was heavily inspired by Nortank12's work (https://github.com/Nortan
 ## Usage
 
 1. Launch the application by double-clicking `Deepcool-Digital-Windows.exe`.
-2. Use the tray icon to toggle between Celsius/Fahrenheit or CPU usage/temperature display modes.
+2. Use the tray icon to toggle between Celsius/Fahrenheit or CPU usage/temperature display modes, and to set the update interval (1–10 seconds).
 3. Monitor your CPU metrics directly on your supported Deepcool AK series cooler.
 
 ---

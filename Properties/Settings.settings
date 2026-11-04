@@ -8,5 +8,8 @@
         <Setting Name="UseFahrenheit" Type="System.Boolean" Scope="User">
             <Value Profile="(Default)">false</Value>
         </Setting>
+        <Setting Name="UpdateIntervalSeconds" Type="System.Int32" Scope="User">
+            <Value Profile="(Default)">1</Value>
+        </Setting>
     </Settings>
 </SettingsFile>
