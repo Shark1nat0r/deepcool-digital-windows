@@ -42,7 +42,7 @@ public class CpuMonitor : IDisposable
         _powerSensor = FindSensor(SensorType.Power, PowerSensorNames);
 
         _coreClockSensors = _cpuHardware.Sensors
-            .Where(s => s.SensorType == SensorType.Clock && s.Name.StartsWith("Core #"))
+            .Where(s => s.SensorType == SensorType.Clock && (s.Name.StartsWith("Core #") || s.Name.StartsWith("CPU Core #")))
             .ToArray();
     }
 
