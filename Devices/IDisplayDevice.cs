@@ -17,6 +17,11 @@ public interface IDisplayDevice : IDisposable
     /// </summary>
     bool SupportsDisplayModes { get; }
 
+    /// <summary>
+    /// False for devices whose display can only show Celsius.
+    /// </summary>
+    bool SupportsFahrenheit { get; }
+
     void SetDisplayMode(DisplayMode mode);
 
     void UpdateDisplay(CpuStatus status, bool isFahrenheit);

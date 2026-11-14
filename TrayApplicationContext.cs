@@ -45,9 +45,11 @@ public class TrayApplicationContext : ApplicationContext
 
     private void UpdateTimer_Tick(object? sender, EventArgs e)
     {
-        var status = _cpuMonitor.Read(_isFahrenheit);
+        // Celsius-only devices always get Celsius, regardless of the saved preference
+        var useFahrenheit = _isFahrenheit && _device.SupportsFahrenheit;
+        var status = _cpuMonitor.Read(useFahrenheit);
         _device.SetDisplayMode(_showCpuUsage ? DisplayMode.CpuUsage : DisplayMode.CpuTemperature);
-        _device.UpdateDisplay(status, _isFahrenheit);
+        _device.UpdateDisplay(status, useFahrenheit);
     }
 
     private void TrayIconManager_TemperatureUnitToggled(object? sender, bool isFahrenheit)
@@ -96,6 +98,7 @@ public class TrayApplicationContext : ApplicationContext
 
         _trayIconManager.SetDisplayModeText(_showCpuUsage ? CpuTemperatureOptionText : CpuUsageOptionText);
         _trayIconManager.SetDisplayModeVisible(_device.SupportsDisplayModes);
+        _trayIconManager.SetTemperatureUnitVisible(_device.SupportsFahrenheit);
         _trayIconManager.SetTooltipText($"DeepCool Display ({_device.Name})");
     }
 

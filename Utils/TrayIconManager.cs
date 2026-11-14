@@ -89,6 +89,11 @@ public class TrayIconManager : IDisposable
         _temperatureUnitMenuItem.Checked = isFahrenheit;
     }
 
+    public void SetTemperatureUnitVisible(bool visible)
+    {
+        _temperatureUnitMenuItem.Visible = visible;
+    }
+
     public void SetUpdateInterval(int seconds)
     {
         foreach (ToolStripMenuItem item in _updateIntervalMenuItem.DropDownItems)
