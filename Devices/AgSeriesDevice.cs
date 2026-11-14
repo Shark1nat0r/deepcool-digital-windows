@@ -17,6 +17,7 @@ public class AgSeriesDevice : IDisplayDevice
 
     public string Name => "AG Series";
     public bool SupportsDisplayModes => true;
+    public bool SupportsFahrenheit => false;
 
     public AgSeriesDevice(HidDevice device)
     {
@@ -35,7 +36,7 @@ public class AgSeriesDevice : IDisplayDevice
         _currentMode = mode;
     }
 
-    // The AG display has two digits and only supports Celsius, so Fahrenheit readings are converted back
+    // The AG display has two digits and only supports Celsius (SupportsFahrenheit is false, so readings arrive in Celsius)
     public void UpdateDisplay(CpuStatus status, bool isFahrenheit)
     {
         if (_stream == null)
@@ -43,8 +44,7 @@ public class AgSeriesDevice : IDisplayDevice
             throw new InvalidOperationException("Device stream is not initialized");
         }
 
-        var temperature = isFahrenheit ? (status.Temperature - 32) * 5 / 9 : status.Temperature;
-        var tempValue = (int)Math.Round(temperature);
+        var tempValue = (int)Math.Round(status.Temperature);
         var value = _currentMode switch
         {
             DisplayMode.CpuTemperature => tempValue,

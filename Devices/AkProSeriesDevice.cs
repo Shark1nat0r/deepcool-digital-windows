@@ -14,6 +14,7 @@ public class AkProSeriesDevice : IDisplayDevice
     private readonly byte[] _displayData = new byte[64];
 
     public string Name => "AK DIGITAL PRO";
+    public bool SupportsFahrenheit => true;
     public bool SupportsDisplayModes => false;
 
     public AkProSeriesDevice(HidDevice device)

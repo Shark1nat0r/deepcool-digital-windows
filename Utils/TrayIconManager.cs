@@ -6,13 +6,16 @@ public class TrayIconManager : IDisposable
     private const string TooltipText = "DeepCool Display";
 
     private readonly ToolStripMenuItem _autoStartMenuItem;
+    private readonly ToolStripMenuItem _pawnIoMissingMenuItem;
     private readonly ToolStripMenuItem _temperatureUnitMenuItem;
+    private readonly ToolStripMenuItem _coreAverageMenuItem;
     private readonly ToolStripMenuItem _toggleDisplayModeMenuItem;
     private readonly ToolStripMenuItem _updateIntervalMenuItem;
 
     public event EventHandler? ExitClicked;
     public event EventHandler<bool>? AutoStartToggled;
     public event EventHandler<bool>? TemperatureUnitToggled;
+    public event EventHandler<bool>? CoreAverageToggled;
     public event EventHandler? DisplayModeToggled; // New event for toggling display mode
     public event EventHandler<int>? UpdateIntervalChanged;
 
@@ -30,6 +33,9 @@ public class TrayIconManager : IDisposable
 
         var contextMenu = new ContextMenuStrip();
 
+        _pawnIoMissingMenuItem = new ToolStripMenuItem("PawnIO driver missing") { Enabled = false, Visible = false };
+        contextMenu.Items.Add(_pawnIoMissingMenuItem);
+
         _toggleDisplayModeMenuItem = new ToolStripMenuItem("Show CPU Usage");
         _toggleDisplayModeMenuItem.Click += ToggleDisplayModeMenuItem_Click;
         contextMenu.Items.Add(_toggleDisplayModeMenuItem);
@@ -40,6 +46,13 @@ public class TrayIconManager : IDisposable
         };
         _temperatureUnitMenuItem.CheckedChanged += TemperatureUnitMenuItem_CheckedChanged;
         contextMenu.Items.Add(_temperatureUnitMenuItem);
+
+        _coreAverageMenuItem = new ToolStripMenuItem("Use Core Average Temperature")
+        {
+            CheckOnClick = true
+        };
+        _coreAverageMenuItem.CheckedChanged += (_, _) => CoreAverageToggled?.Invoke(this, _coreAverageMenuItem.Checked);
+        contextMenu.Items.Add(_coreAverageMenuItem);
 
         _updateIntervalMenuItem = new ToolStripMenuItem("Update Interval");
         for (var seconds = MinUpdateIntervalSeconds; seconds <= MaxUpdateIntervalSeconds; seconds++)
@@ -87,6 +100,26 @@ public class TrayIconManager : IDisposable
     public void SetTemperatureUnitState(bool isFahrenheit)
     {
         _temperatureUnitMenuItem.Checked = isFahrenheit;
+    }
+
+    public void SetCoreAverageState(bool useCoreAverage)
+    {
+        _coreAverageMenuItem.Checked = useCoreAverage;
+    }
+
+    public void SetCoreAverageVisible(bool visible)
+    {
+        _coreAverageMenuItem.Visible = visible;
+    }
+
+    public void SetPawnIoMissingVisible(bool visible)
+    {
+        _pawnIoMissingMenuItem.Visible = visible;
+    }
+
+    public void SetTemperatureUnitVisible(bool visible)
+    {
+        _temperatureUnitMenuItem.Visible = visible;
     }
 
     public void SetUpdateInterval(int seconds)

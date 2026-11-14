@@ -20,6 +20,7 @@ public class AkG2SeriesDevice : IDisplayDevice
     private readonly byte[] _displayData = new byte[64];
 
     public string Name => "AK G2 Series";
+    public bool SupportsFahrenheit => true;
     public bool SupportsDisplayModes => false;
 
     public AkG2SeriesDevice(HidDevice device)

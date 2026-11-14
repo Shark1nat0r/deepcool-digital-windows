@@ -19,6 +19,7 @@ public class AkSeriesDevice : IDisplayDevice
     private DisplayMode _currentMode;
 
     public string Name => "AK Series";
+    public bool SupportsFahrenheit => true;
     public bool SupportsDisplayModes => true;
 
     public AkSeriesDevice(HidDevice device)
