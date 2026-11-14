@@ -17,7 +17,6 @@ public class TrayApplicationContext : ApplicationContext
     private bool _isFahrenheit;
     private bool _showCpuUsage;
     private int _updateIntervalSeconds;
-    private readonly Random _random = new Random();
 
     public TrayApplicationContext()
     {
