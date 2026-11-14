@@ -14,6 +14,9 @@ public class TrayApplicationContext : ApplicationContext
     private const string CpuTemperatureOptionText = "Show CPU Temperature";
     private const string CpuUsageOptionText = "Show CPU Usage";
 
+    // Without the PawnIO driver there are no temperature readings, so only CPU usage can be shown
+    private readonly bool _isPawnIoInstalled = LibreHardwareMonitor.PawnIo.PawnIo.IsInstalled;
+
     private bool _isFahrenheit;
     private bool _showCpuUsage;
     private bool _useCoreAverage;
@@ -51,7 +54,7 @@ public class TrayApplicationContext : ApplicationContext
         // Celsius-only devices always get Celsius, regardless of the saved preference
         var useFahrenheit = _isFahrenheit && _device.SupportsFahrenheit;
         var status = _cpuMonitor.Read(useFahrenheit, _useCoreAverage);
-        _device.SetDisplayMode(_showCpuUsage ? DisplayMode.CpuUsage : DisplayMode.CpuTemperature);
+        _device.SetDisplayMode(_showCpuUsage || !_isPawnIoInstalled ? DisplayMode.CpuUsage : DisplayMode.CpuTemperature);
         _device.UpdateDisplay(status, useFahrenheit);
     }
 
@@ -99,11 +102,12 @@ public class TrayApplicationContext : ApplicationContext
         _trayIconManager.SetTemperatureUnitState(_isFahrenheit);
         _trayIconManager.SetUpdateInterval(_updateIntervalSeconds);
         _trayIconManager.SetCoreAverageState(_useCoreAverage);
-        _trayIconManager.SetCoreAverageVisible(_cpuMonitor.SupportsCoreAverage);
+        _trayIconManager.SetCoreAverageVisible(_cpuMonitor.SupportsCoreAverage && _isPawnIoInstalled);
 
         _trayIconManager.SetDisplayModeText(_showCpuUsage ? CpuTemperatureOptionText : CpuUsageOptionText);
-        _trayIconManager.SetDisplayModeVisible(_device.SupportsDisplayModes);
-        _trayIconManager.SetTemperatureUnitVisible(_device.SupportsFahrenheit);
+        _trayIconManager.SetDisplayModeVisible(_device.SupportsDisplayModes && _isPawnIoInstalled);
+        _trayIconManager.SetTemperatureUnitVisible(_device.SupportsFahrenheit && _isPawnIoInstalled);
+        _trayIconManager.SetPawnIoMissingVisible(!_isPawnIoInstalled);
         _trayIconManager.SetTooltipText($"DeepCool Display ({_device.Name})");
     }
 

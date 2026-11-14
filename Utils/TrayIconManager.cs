@@ -6,6 +6,7 @@ public class TrayIconManager : IDisposable
     private const string TooltipText = "DeepCool Display";
 
     private readonly ToolStripMenuItem _autoStartMenuItem;
+    private readonly ToolStripMenuItem _pawnIoMissingMenuItem;
     private readonly ToolStripMenuItem _temperatureUnitMenuItem;
     private readonly ToolStripMenuItem _coreAverageMenuItem;
     private readonly ToolStripMenuItem _toggleDisplayModeMenuItem;
@@ -31,6 +32,9 @@ public class TrayIconManager : IDisposable
         };
 
         var contextMenu = new ContextMenuStrip();
+
+        _pawnIoMissingMenuItem = new ToolStripMenuItem("PawnIO driver missing") { Enabled = false, Visible = false };
+        contextMenu.Items.Add(_pawnIoMissingMenuItem);
 
         _toggleDisplayModeMenuItem = new ToolStripMenuItem("Show CPU Usage");
         _toggleDisplayModeMenuItem.Click += ToggleDisplayModeMenuItem_Click;
@@ -106,6 +110,11 @@ public class TrayIconManager : IDisposable
     public void SetCoreAverageVisible(bool visible)
     {
         _coreAverageMenuItem.Visible = visible;
+    }
+
+    public void SetPawnIoMissingVisible(bool visible)
+    {
+        _pawnIoMissingMenuItem.Visible = visible;
     }
 
     public void SetTemperatureUnitVisible(bool visible)
