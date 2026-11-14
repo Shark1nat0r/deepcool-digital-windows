@@ -7,7 +7,7 @@ public readonly record struct CpuStatus(float Temperature, float Usage, float Po
 public class CpuMonitor : IDisposable
 {
     // Preferred sensor names, in priority order (AMD first, then Intel)
-    private static readonly string[] TemperatureSensorNames = ["Core (Tctl/Tdie)", "CPU Package", "Core (Tctl)", "Core (Tdie)"];
+    private static readonly string[] TemperatureSensorNames = ["Core Average", "Core (Tctl/Tdie)", "CPU Package", "Core (Tctl)", "Core (Tdie)"];
     private static readonly string[] PowerSensorNames = ["Package", "CPU Package"];
     private const string TotalLoadSensorName = "CPU Total";
 
