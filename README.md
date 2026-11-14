@@ -3,39 +3,47 @@
 **Deepcool-Digital-Windows** is a lightweight alternative to the official software from Deepcool, designed to display CPU usage and temperature on Deepcool coolers. It currently supports **non-pro AK series**, **AK G2 series (DIGITAL NYX)**, **AK DIGITAL PRO (AK500/AK620)** and **AG series** devices. This project is intended for users who prefer a streamlined solution for monitoring their CPU metrics without the overhead of the official software.
 
 > [!IMPORTANT]
-> **CPU temperature, power consumption and frequency require the [PawnIO driver](https://pawnio.eu/).** Without it, the app still works and shows CPU usage, but the other values are shown as 0.
+> **CPU temperature, power consumption and frequency require the [PawnIO driver](https://pawnio.eu/).** Without it, the app still works and shows CPU usage, but the other values are shown as 0, and the tray menu shows "PawnIO driver missing".
 
 ---
 
 ## Features
 
-- Displays **CPU usage** and **CPU temperature** directly on supported Deepcool AK series coolers.
-- On AK G2 series coolers, sends **CPU power**, **temperature**, **usage** and **frequency**; the cooler cycles through them on its own.
-- Toggle between **Celsius** and **Fahrenheit** temperature units.
-- Switch between displaying **CPU usage** or **CPU temperature**.
+- Shows live CPU metrics on supported Deepcool coolers. Which metrics depend on the cooler; see [Supported Devices](#supported-devices).
+- Switch between displaying **CPU usage** or **CPU temperature** (on coolers with a single value display).
+- Toggle between **Celsius** and **Fahrenheit** (on coolers that support it).
+- Optionally show the **Core Average** temperature instead of CPU Package (see [Core Average](#core-average)).
+- Adjustable update interval (1–10 seconds).
+- Optional **Start with Windows**.
+- All settings are remembered between runs.
 - Lightweight and efficient implementation using the **.NET 9 Runtime**.
+
+### Core Average
+
+- **Intel:** the average of all core temperatures.
+- **AMD Ryzen:** Ryzen doesn't report per-core temperatures, so the CCD (chiplet) temperature is used instead: the average across CCDs on multi-CCD CPUs (e.g. 5950X, 7950X), or the single CCD1 temperature on single-CCD CPUs (e.g. 5800X, 7800X3D), which is not an average.
+- The option is hidden if the CPU reports neither (e.g. Ryzen 1000/2000 series and APUs such as the 5600G or 8700G) or PawnIO is not installed.
 
 ---
 
 ## Supported Devices
 
-- **Non-Pro AK Series Coolers** (AK400 DIGITAL, AK500 DIGITAL, AK500S DIGITAL, AK620 DIGITAL)
-- **AK G2 Series Coolers** (AK400 G2 DIGITAL NYX, AK500 G2 DIGITAL NYX, AK620 G2 DIGITAL NYX, AK700 DIGITAL NYX)
-    - The display mode toggle is hidden for these devices, since the cooler shows all metrics itself.
-- **AK DIGITAL PRO Coolers** (AK500 DIGITAL PRO, AK620 DIGITAL PRO)
-    - Same behavior as the AK G2 series.
-- **AG Series Coolers** (AG300 DIGITAL, AG400 DIGITAL, AG500 DIGITAL, AG620 DIGITAL)
-    - Only Celsius is supported; values are limited to two digits (max. 99).
-- This app does not currently support other Pro models (e.g. AK400 DIGITAL PRO) or other Deepcool devices.
-- The device is detected automatically by its USB product ID.
+| Series | Models | What the display shows | Usage/temperature toggle | Fahrenheit |
+|---|---|---|:---:|:---:|
+| **AK DIGITAL** | AK400, AK500, AK500S, AK620 DIGITAL | CPU usage *or* temperature | ✅ | ✅ |
+| **AK DIGITAL NYX (G2)** | AK400 G2, AK500 G2, AK620 G2, AK700 DIGITAL NYX | Power, temperature, usage and frequency, cycled by the cooler itself | — | ✅ |
+| **AK DIGITAL PRO** | AK500, AK620 DIGITAL PRO | Power, temperature, usage and frequency, cycled by the cooler itself | — | ✅ |
+| **AG DIGITAL** | AG300, AG400, AG500, AG620 DIGITAL | CPU usage *or* temperature (two digits, max. 99) | ✅ | ❌ Celsius only |
+
+- The cooler is detected automatically by its USB product ID.
+- Other Pro models (e.g. AK400 DIGITAL PRO) and other Deepcool devices are not supported yet.
 
 ---
 
 ## Disclaimer
 
 - This project and its author are **not associated with Deepcool in any way**.
-- The app is provided **as-is**, and you use it at your own risk. Ensure you understand the implications of running software that requires administrator privileges.
-- The app requires **administrator rights** to read CPU temperature data.
+- The app is provided **as-is**, and you use it at your own risk. It runs with **administrator rights**; make sure you understand the implications of that.
 
 ---
 
@@ -53,9 +61,9 @@ This project was heavily inspired by Nortank12's work (https://github.com/Nortan
         - A version that does not include the runtime (framework-dependent).
     - If using the framework-dependent version, ensure the .NET 9 Runtime is installed on your system. Download it from [Microsoft's official site](https://dotnet.microsoft.com/).
 2. **Administrator Rights**
-    - The app requires elevated privileges to access CPU temperature data.
+    - Required to read CPU temperature, power and frequency through the PawnIO driver, and to register the "Start with Windows" task.
 3. **[PawnIO Driver](https://pawnio.eu/)** (optional, for temperature, power and frequency)
-    - Required to read CPU temperature, power consumption and frequency. Without it, CPU usage still works, but the other values are shown as 0.
+    - Required to read CPU temperature, power consumption and frequency. Without it, CPU usage still works, but the other values are shown as 0 and the tray menu shows "PawnIO driver missing".
 
 ---
 
@@ -83,9 +91,13 @@ The `SHA256SUMS.txt` file attached to each release lists the checksums of the bi
 
 ## Usage
 
-1. Launch the application by double-clicking the downloaded `.exe`.
-2. Use the tray icon to toggle between Celsius/Fahrenheit or CPU usage/temperature display modes, and to set the update interval (1–10 seconds).
-3. Monitor your CPU metrics directly on your supported Deepcool AK series cooler.
+1. Right-click the downloaded `.exe` and choose **Run as administrator**.
+2. Use the tray icon menu to:
+    - switch between CPU usage and temperature (AK DIGITAL and AG coolers),
+    - toggle Celsius/Fahrenheit and Core Average temperature,
+    - set the update interval (1–10 seconds),
+    - enable **Start with Windows**, which starts the app with administrator rights at logon without a prompt.
+3. Watch your CPU metrics on your Deepcool cooler.
 
 ---
 
@@ -95,6 +107,7 @@ The `SHA256SUMS.txt` file attached to each release lists the checksums of the bi
 
 - **LibreHardwareMonitor**: For reading CPU metrics (licensed under MPL-2.0).
 - **HidSharp**: For USB HID communication with Deepcool devices (licensed under Apache 2.0).
+- **TaskScheduler**: For the "Start with Windows" scheduled task (licensed under MIT).
 
 
 ### License:

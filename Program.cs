@@ -14,7 +14,7 @@ internal static class Program
         {
             if (!IsAdministrator())
             {
-                MessageBox.Show("To get sensor data you must run this program as administrator.",
+                MessageBox.Show("This program must be run as administrator to read CPU temperature, power and frequency.",
                     "Error",
                     MessageBoxButtons.OK,
                     MessageBoxIcon.Error);
