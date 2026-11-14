@@ -25,6 +25,14 @@ namespace DeepCool_Display.Properties
         }
 
         [UserScopedSetting]
+        [DefaultSettingValue("false")]
+        public bool UseCoreAverage
+        {
+            get => (bool)this["UseCoreAverage"];
+            set => this["UseCoreAverage"] = value;
+        }
+
+        [UserScopedSetting]
         [DefaultSettingValue("1")]
         public int UpdateIntervalSeconds
         {

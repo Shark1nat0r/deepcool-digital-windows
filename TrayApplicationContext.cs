@@ -16,12 +16,14 @@ public class TrayApplicationContext : ApplicationContext
 
     private bool _isFahrenheit;
     private bool _showCpuUsage;
+    private bool _useCoreAverage;
     private int _updateIntervalSeconds;
 
     public TrayApplicationContext()
     {
         _isFahrenheit = Properties.Settings.Default.UseFahrenheit;
         _showCpuUsage = Properties.Settings.Default.ShowCpuUsage;
+        _useCoreAverage = Properties.Settings.Default.UseCoreAverage;
         _updateIntervalSeconds = Math.Clamp(Properties.Settings.Default.UpdateIntervalSeconds,
             TrayIconManager.MinUpdateIntervalSeconds, TrayIconManager.MaxUpdateIntervalSeconds);
 
@@ -39,6 +41,7 @@ public class TrayApplicationContext : ApplicationContext
         _trayIconManager.ExitClicked += TrayIconManager_ExitClicked;
         _trayIconManager.AutoStartToggled += TrayIconManager_AutoStartToggled;
         _trayIconManager.UpdateIntervalChanged += TrayIconManager_UpdateIntervalChanged;
+        _trayIconManager.CoreAverageToggled += (_, useCoreAverage) => _useCoreAverage = useCoreAverage;
 
         InitializeAutoStartState();
     }
@@ -47,7 +50,7 @@ public class TrayApplicationContext : ApplicationContext
     {
         // Celsius-only devices always get Celsius, regardless of the saved preference
         var useFahrenheit = _isFahrenheit && _device.SupportsFahrenheit;
-        var status = _cpuMonitor.Read(useFahrenheit);
+        var status = _cpuMonitor.Read(useFahrenheit, _useCoreAverage);
         _device.SetDisplayMode(_showCpuUsage ? DisplayMode.CpuUsage : DisplayMode.CpuTemperature);
         _device.UpdateDisplay(status, useFahrenheit);
     }
@@ -95,6 +98,8 @@ public class TrayApplicationContext : ApplicationContext
 
         _trayIconManager.SetTemperatureUnitState(_isFahrenheit);
         _trayIconManager.SetUpdateInterval(_updateIntervalSeconds);
+        _trayIconManager.SetCoreAverageState(_useCoreAverage);
+        _trayIconManager.SetCoreAverageVisible(_cpuMonitor.SupportsCoreAverage);
 
         _trayIconManager.SetDisplayModeText(_showCpuUsage ? CpuTemperatureOptionText : CpuUsageOptionText);
         _trayIconManager.SetDisplayModeVisible(_device.SupportsDisplayModes);
@@ -107,6 +112,7 @@ public class TrayApplicationContext : ApplicationContext
         Properties.Settings.Default.ShowCpuUsage = _showCpuUsage;
         Properties.Settings.Default.UseFahrenheit = _isFahrenheit;
         Properties.Settings.Default.UpdateIntervalSeconds = _updateIntervalSeconds;
+        Properties.Settings.Default.UseCoreAverage = _useCoreAverage;
 
         Properties.Settings.Default.Save();
     }
