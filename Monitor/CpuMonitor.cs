@@ -49,8 +49,10 @@ public class CpuMonitor : IDisposable
         _usageSensor = FindSensor(SensorType.Load, [TotalLoadSensorName]);
         _powerSensor = FindSensor(SensorType.Power, PowerSensorNames);
 
+        // Per-core clocks: "Core #N" (AMD), "CPU Core #N" (Intel), "P-Core #N" / "E-Core #N" (Intel hybrid, 12th gen+).
+        // Excludes non-core clocks such as "Bus Speed".
         _coreClockSensors = _cpuHardware.Sensors
-            .Where(s => s.SensorType == SensorType.Clock && (s.Name.StartsWith("Core #") || s.Name.StartsWith("CPU Core #")))
+            .Where(s => s.SensorType == SensorType.Clock && s.Name.Contains("Core #"))
             .ToArray();
     }
 
