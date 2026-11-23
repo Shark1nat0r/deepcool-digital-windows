@@ -10,7 +10,7 @@ internal static class Program
         Application.EnableVisualStyles();
         Application.SetCompatibleTextRenderingDefault(false);
 
-        if (args.Length == 0 || args[0] != "--scheduled")
+        if (args.Length == 0 || args[0] != Utils.AutoStartManager.ScheduledArgument)
         {
             if (!IsAdministrator())
             {

@@ -97,6 +97,8 @@ The `SHA256SUMS.txt` file attached to each release lists the checksums of the bi
     - toggle Celsius/Fahrenheit and Core Average temperature,
     - set the update interval (1–10 seconds),
     - enable **Start with Windows**, which starts the app with administrator rights at logon without a prompt.
+      This uses a Task Scheduler task named "DeepCool Display", so don't add the app to the Startup folder or Task Manager's startup apps (Windows skips apps that need administrator rights there).
+      If you move or rename the `.exe`, launch it once from its new location and the task is updated automatically.
 3. Watch your CPU metrics on your Deepcool cooler.
 
 ---

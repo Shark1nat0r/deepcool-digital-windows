@@ -81,7 +81,7 @@ public class TrayApplicationContext : ApplicationContext
         Application.Exit();
     }
 
-    private static void TrayIconManager_AutoStartToggled(object? sender, bool enabled)
+    private void TrayIconManager_AutoStartToggled(object? sender, bool enabled)
     {
         try
         {
@@ -89,6 +89,8 @@ public class TrayApplicationContext : ApplicationContext
         }
         catch (Exception ex)
         {
+            // CheckOnClick already flipped the item, so revert it to the unchanged state
+            _trayIconManager.SetAutoStartMenuItemState(!enabled);
             MessageBox.Show($"Failed to update Auto-Start setting: {ex.Message}", "Error",
                 MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
@@ -96,7 +98,18 @@ public class TrayApplicationContext : ApplicationContext
 
     private void InitializeAutoStartState()
     {
-        var isAutoStartEnabled = AutoStartManager.IsAutoStartEnabled();
+        // Repairs the task if the exe was moved or renamed since autostart was enabled.
+        // A Task Scheduler failure must not prevent the app from starting.
+        bool isAutoStartEnabled;
+        try
+        {
+            isAutoStartEnabled = AutoStartManager.SyncTask();
+        }
+        catch
+        {
+            isAutoStartEnabled = false;
+        }
+
         _trayIconManager.SetAutoStartMenuItemState(isAutoStartEnabled);
 
         _trayIconManager.SetTemperatureUnitState(_isFahrenheit);
