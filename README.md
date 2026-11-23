@@ -15,6 +15,7 @@ A small tray app that shows CPU usage, temperature, power and clock speed on the
 |---|---|---|:---:|
 | AK DIGITAL | AK400, AK500, AK500S, AK620 DIGITAL | Usage or temperature | Yes |
 | AK DIGITAL NYX (G2) and PRO | AK400 G2, AK500 G2, AK620 G2, AK700 DIGITAL NYX, AK500 and AK620 DIGITAL PRO | Power, temperature, usage and clock, cycled by the cooler | Yes |
+| LQ (liquid) | LQ240, LQ360 | Power, temperature, usage and clock, cycled by the cooler | Yes |
 | AG DIGITAL | AG300, AG400, AG500, AG620 DIGITAL | Usage or temperature, two digits | No |
 
 The app finds the cooler by its USB product ID. Other DeepCool devices, including the AK400 DIGITAL PRO, are not supported yet.
