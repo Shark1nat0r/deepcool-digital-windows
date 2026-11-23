@@ -1,129 +1,75 @@
-﻿# Deepcool-Digital-Windows
+# DeepCool Digital for Windows
 
-**Deepcool-Digital-Windows** is a lightweight alternative to the official software from Deepcool, designed to display CPU usage and temperature on Deepcool coolers. It currently supports **non-pro AK series**, **AK G2 series (DIGITAL NYX)**, **AK DIGITAL PRO (AK500/AK620)** and **AG series** devices. This project is intended for users who prefer a streamlined solution for monitoring their CPU metrics without the overhead of the official software.
+[![Latest release](https://img.shields.io/github/v/release/Shark1nat0r/deepcool-digital-windows)](https://github.com/Shark1nat0r/deepcool-digital-windows/releases/latest)
+[![Downloads](https://img.shields.io/github/downloads/Shark1nat0r/deepcool-digital-windows/total)](https://github.com/Shark1nat0r/deepcool-digital-windows/releases)
+[![.NET 9](https://img.shields.io/badge/.NET-9-512BD4)](https://dotnet.microsoft.com/download/dotnet/9.0)
+[![License](https://img.shields.io/github/license/Shark1nat0r/deepcool-digital-windows)](LICENSE)
 
-> [!IMPORTANT]
-> **CPU temperature, power consumption and frequency require the [PawnIO driver](https://pawnio.eu/).** Without it, the app still works and shows CPU usage, but the other values are shown as 0, and the tray menu shows "PawnIO driver missing".
+A small tray app that shows CPU usage, temperature, power and clock speed on the display of DeepCool DIGITAL coolers. It replaces the official DeepCool software and has no window, only a tray menu.
 
----
+<img src="docs/images/tray-menu.svg" alt="Tray menu with the Update Interval submenu open" width="392">
 
-## Features
+## Supported coolers
 
-- Shows live CPU metrics on supported Deepcool coolers. Which metrics depend on the cooler; see [Supported Devices](#supported-devices).
-- Switch between displaying **CPU usage** or **CPU temperature** (on coolers with a single value display).
-- Toggle between **Celsius** and **Fahrenheit** (on coolers that support it).
-- Optionally show the **Core Average** temperature instead of CPU Package (see [Core Average](#core-average)).
-- Adjustable update interval (1–10 seconds).
-- Optional **Start with Windows**.
-- All settings are remembered between runs.
-- Lightweight and efficient implementation using the **.NET 9 Runtime**.
+| Series | Models | Display shows | Fahrenheit |
+|---|---|---|:---:|
+| AK DIGITAL | AK400, AK500, AK500S, AK620 DIGITAL | Usage or temperature | Yes |
+| AK DIGITAL NYX (G2) and PRO | AK400 G2, AK500 G2, AK620 G2, AK700 DIGITAL NYX, AK500 and AK620 DIGITAL PRO | Power, temperature, usage and clock, cycled by the cooler | Yes |
+| LQ (liquid) | LQ240, LQ360 | Power, temperature, usage and clock, cycled by the cooler | Yes |
+| AG DIGITAL | AG300, AG400, AG500, AG620 DIGITAL | Usage or temperature, two digits | No |
+
+The app finds the cooler by its USB product ID. Other DeepCool devices, including the AK400 DIGITAL PRO, are not supported yet.
+
+## Install
+
+1. Download a build from [Releases](https://github.com/Shark1nat0r/deepcool-digital-windows/releases).
+   `deepcool-display-self-contained.exe` runs as is.
+   `deepcool-display-framework-dependent.exe` is smaller but needs the [.NET 9 Desktop Runtime](https://dotnet.microsoft.com/download/dotnet/9.0).
+2. Install the [PawnIO driver](https://pawnio.eu/). Without it only CPU usage works, the other values show 0 and the menu shows "PawnIO driver missing".
+3. Right click the exe and choose **Run as administrator**. Admin rights are needed to read the sensors and to create the autostart task.
+
+## Tray menu
+
+| Item | What it does |
+|---|---|
+| Show CPU Usage / Show CPU Temperature | Switches what the display shows. AK DIGITAL and AG only. |
+| Use Fahrenheit | Shows temperatures in Fahrenheit. |
+| Use Core Average Temperature | Uses the core average instead of CPU Package. See [Core Average](#core-average). |
+| Update Interval | How often the display updates, from 1 to 10 seconds. |
+| Start with Windows | Starts the app at logon. See [Start with Windows](#start-with-windows). |
+
+Settings are saved between runs. Hover the tray icon to see which cooler was detected.
 
 ### Core Average
 
-- **Intel:** the average of all core temperatures.
-- **AMD Ryzen:** Ryzen doesn't report per-core temperatures, so the CCD (chiplet) temperature is used instead: the average across CCDs on multi-CCD CPUs (e.g. 5950X, 7950X), or the single CCD1 temperature on single-CCD CPUs (e.g. 5800X, 7800X3D), which is not an average.
-- The option is hidden if the CPU reports neither (e.g. Ryzen 1000/2000 series and APUs such as the 5600G or 8700G) or PawnIO is not installed.
+**Intel:** the average of all core temperatures.
 
----
+**AMD Ryzen:** Ryzen has no per core sensors, so the app uses the CCD temperature. CPUs with two CCDs (5950X, 7950X) get the average of both. CPUs with one CCD (5800X, 7800X3D) get that single value.
 
-## Supported Devices
+The option is hidden when PawnIO is missing or the CPU reports neither value, for example Ryzen 1000 and 2000 or APUs like the 5600G and 8700G.
 
-| Series | Models | What the display shows | Usage/temperature toggle | Fahrenheit |
-|---|---|---|:---:|:---:|
-| **AK DIGITAL** | AK400, AK500, AK500S, AK620 DIGITAL | CPU usage *or* temperature | ✅ | ✅ |
-| **AK DIGITAL NYX (G2)** | AK400 G2, AK500 G2, AK620 G2, AK700 DIGITAL NYX | Power, temperature, usage and frequency, cycled by the cooler itself | — | ✅ |
-| **AK DIGITAL PRO** | AK500, AK620 DIGITAL PRO | Power, temperature, usage and frequency, cycled by the cooler itself | — | ✅ |
-| **AG DIGITAL** | AG300, AG400, AG500, AG620 DIGITAL | CPU usage *or* temperature (two digits, max. 99) | ✅ | ❌ Celsius only |
+### Start with Windows
 
-- The cooler is detected automatically by its USB product ID.
-- Other Pro models (e.g. AK400 DIGITAL PRO) and other Deepcool devices are not supported yet.
+This creates a Task Scheduler task named "DeepCool Display" that starts the app with admin rights and no UAC prompt. Do not use the Startup folder or Task Manager startup apps instead. Windows skips apps that need admin rights there. If you move the exe, run it once from the new location and the task updates itself.
 
----
+## Verify a download
 
-## Disclaimer
-
-- This project and its author are **not associated with Deepcool in any way**.
-- The app is provided **as-is**, and you use it at your own risk. It runs with **administrator rights**; make sure you understand the implications of that.
-
----
-
-## Inspiration
-
-This project was heavily inspired by Nortank12's work (https://github.com/Nortank12/deepcool-digital-linux) for the Linux implementation of Deepcool cooler support. Special thanks to Nortank12 for their contributions to the community!
-
----
-
-## Requirements
-
-1. **.NET 9 Runtime**
-    - You can find two versions of the app on the [Releases page](https://github.com/Shark1nat0r/deepcool-digital-windows/releases):
-        - A version that includes the runtime (self-contained).
-        - A version that does not include the runtime (framework-dependent).
-    - If using the framework-dependent version, ensure the .NET 9 Runtime is installed on your system. Download it from [Microsoft's official site](https://dotnet.microsoft.com/).
-2. **Administrator Rights**
-    - Required to read CPU temperature, power and frequency through the PawnIO driver, and to register the "Start with Windows" task.
-3. **[PawnIO Driver](https://pawnio.eu/)** (optional, for temperature, power and frequency)
-    - Required to read CPU temperature, power consumption and frequency. Without it, CPU usage still works, but the other values are shown as 0 and the tray menu shows "PawnIO driver missing".
-
----
-
-## Installation
-
-1. Download the latest release from the [Releases page](https://github.com/Shark1nat0r/deepcool-digital-windows/releases).
-2. Choose either:
-    - The **self-contained version**, which includes all necessary runtime files.
-    - The **framework-dependent version**, which requires .NET 9 Runtime to be installed separately.
-3. Save the downloaded `.exe` to a folder of your choice.
-4. **Install the [PawnIO Driver](https://pawnio.eu/)** if you want CPU temperature, power and frequency readings. CPU usage works without it.
-5. Run `deepcool-display-self-contained.exe` (or `deepcool-display-framework-dependent.exe`) with administrator privileges.
-
-### Verifying a Release
-
-Releases are built by GitHub Actions from the tagged commit and signed with a build provenance attestation. To check that a downloaded file was built by this repository's workflow, run:
+Releases are built by GitHub Actions and carry a build provenance attestation:
 
 ```
 gh attestation verify deepcool-display-self-contained.exe --repo Shark1nat0r/deepcool-digital-windows
 ```
 
-The `SHA256SUMS.txt` file attached to each release lists the checksums of the binaries.
+Each release also includes `SHA256SUMS.txt`.
 
----
+## Credits
 
-## Usage
+Based on [deepcool-digital-linux](https://github.com/Nortank12/deepcool-digital-linux) by Nortank12.
 
-1. Right-click the downloaded `.exe` and choose **Run as administrator**.
-2. Use the tray icon menu to:
-    - switch between CPU usage and temperature (AK DIGITAL and AG coolers),
-    - toggle Celsius/Fahrenheit and Core Average temperature,
-    - set the update interval (1–10 seconds),
-    - enable **Start with Windows**, which starts the app with administrator rights at logon without a prompt.
-3. Watch your CPU metrics on your Deepcool cooler.
+Uses [LibreHardwareMonitor](https://github.com/LibreHardwareMonitor/LibreHardwareMonitor) (MPL 2.0), [HidSharp](https://www.zer7.com/software/hidsharp) (Apache 2.0) and [TaskScheduler](https://github.com/dahall/TaskScheduler) (MIT). Full texts are in [THIRD_PARTY_LICENSES](THIRD_PARTY_LICENSES).
 
----
+## License
 
-## Development
+[MIT](LICENSE). Not affiliated with DeepCool. Use at your own risk.
 
-### Built With:
-
-- **LibreHardwareMonitor**: For reading CPU metrics (licensed under MPL-2.0).
-- **HidSharp**: For USB HID communication with Deepcool devices (licensed under Apache 2.0).
-- **TaskScheduler**: For the "Start with Windows" scheduled task (licensed under MIT).
-
-
-### License:
-
-This project is licensed under the [MIT License](LICENSE). See the `LICENSE` file for details.
-
----
-
-## Contributions
-
-Contributions are welcome! Please feel free to open issues or submit pull requests if you have ideas for improvements or additional features.
-
----
-
-## Support
-
-If you encounter any issues, please open an issue on this repository or reach out through GitHub discussions.
-
-
+Bugs go in [Issues](https://github.com/Shark1nat0r/deepcool-digital-windows/issues), ideas in [Discussions](https://github.com/Shark1nat0r/deepcool-digital-windows/discussions).

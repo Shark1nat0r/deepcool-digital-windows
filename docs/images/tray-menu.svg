@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="392" height="436" viewBox="0 0 392 436" role="img" aria-label="DeepCool Display tray menu">
+<defs><filter id="s"><feDropShadow dy="4" stdDeviation="5" flood-opacity=".35"/></filter><path id="c" d="M0 1l4 4 8-9"/></defs>
+<g fill="#2c2c2c" stroke="#454545" filter="url(#s)">
+<rect x="10" y="10" width="270" height="212" rx="8"/>
+<rect x="284" y="112" width="92" height="308" rx="8"/>
+</g>
+<rect x="14" y="116" width="262" height="34" rx="4" fill="#3d3d3d"/>
+<g fill="none" stroke="#fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+<path d="M258 128l5 5-5 5" stroke="#cfcfcf"/>
+<use href="#c" x="26" y="95"/>
+<use href="#c" x="26" y="163"/>
+<use href="#c" x="298" y="127"/>
+</g>
+<g fill="#fff" font-family="Segoe UI Variable Text, Segoe UI, system-ui, sans-serif" font-size="14">
+<text x="54" y="36">Show CPU Usage</text>
+<text x="54" y="70">Use Fahrenheit</text>
+<text x="54" y="104">Use Core Average Temperature</text>
+<text x="54" y="138">Update Interval</text>
+<text x="54" y="172">Start with Windows</text>
+<text x="54" y="206">Exit</text>
+<text x="324" y="136">1 s</text>
+<text x="324" y="166">2 s</text>
+<text x="324" y="196">3 s</text>
+<text x="324" y="226">4 s</text>
+<text x="324" y="256">5 s</text>
+<text x="324" y="286">6 s</text>
+<text x="324" y="316">7 s</text>
+<text x="324" y="346">8 s</text>
+<text x="324" y="376">9 s</text>
+<text x="324" y="406">10 s</text>
+</g>
+</svg>
